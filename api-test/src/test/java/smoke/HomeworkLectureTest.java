@@ -1,6 +1,6 @@
 package smoke;
 
-import dto.Goods;
+import dto.GoodsDto;
 import endpoint.Urls;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -48,7 +48,7 @@ public class HomeworkLectureTest {
                 .baseUri("http://localhost:8080")
                 .basePath("/goods")
                 .queryParam("page", 0)
-                .queryParam("size", 1000)
+                .queryParam("size", 1000000)
                 .log().all()
         .when()
                 .get(Urls.LIST)
@@ -63,7 +63,7 @@ public class HomeworkLectureTest {
                 .baseUri("http://localhost:8080")
                 .basePath("/goods")
                 .queryParam("page", 0)
-                .queryParam("size", 100000)
+                .queryParam("size", 1000000)
                 .auth().basic("admin", "secret123")
                 .log().all();
     }
@@ -102,7 +102,7 @@ public class HomeworkLectureTest {
                 .spec(rs)
         .when()
                 .contentType(ContentType.JSON)
-                .body(new Goods(
+                .body(new GoodsDto(
                             "Goods " + new Random().nextInt(1000, 10000),
                             new Random().nextInt(0, 100)
                         ))
@@ -137,28 +137,29 @@ public class HomeworkLectureTest {
         // Создаем товар (POST /add) и запоминаем его id
         Integer id = given()
                 .spec(rs)
-                .when()
+        .when()
                 .contentType(ContentType.JSON)
-                .body(new Goods(
+                .body(new GoodsDto(
                         "Goods " + new Random().nextInt(1000, 10000),
                         new Random().nextInt(0, 100)
                 ))
                 .post(Urls.ADD)
-                .then()
+        .then()
                 .log().all()
                 .statusCode(200)
-                .extract()
+        .extract()
                 .path("data.id");
 
         // Запрашиваем список товаров (GET /list)
         Response response = given()
                 .spec(rs)
-                .when()
+        .when()
                 .get(Urls.LIST)
-                .then()
+        .then()
                 .log().all()
                 .statusCode(200)
-                .extract().response();
+        .extract()
+                .response();
 
         // Проверка того что в теле ответа, в массиве goods есть элемент содержащий "id" равный id
         Assertions.assertThat(response.jsonPath().getList("goods.id", Integer.class))

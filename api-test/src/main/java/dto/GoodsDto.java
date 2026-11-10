@@ -1,6 +1,6 @@
 package dto;
 
-public record Goods(
+public record GoodsDto(
         String name,
         double price
 ) {

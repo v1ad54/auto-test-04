@@ -1,5 +1,4 @@
 import assertion.BasicApiAssert;
-import assertion.GoodsApiAssert;
 import endpoint.GoodsApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;

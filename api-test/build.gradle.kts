@@ -29,4 +29,32 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+
+    // Стандартные выводы внутри тестов направляем в консоль
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
+tasks.register<Test>("TestApi") {
+    group = "my_test_tasks"
+    description = "Задача запускает тесты API."
+
+    // Стандартные выводы внутри тестов направляем в консоль
+    testLogging {
+        showStandardStreams = true
+    }
+
+    useJUnitPlatform {
+        includeTags("TestApi")
+    }
+
+    // Чтобы тесты всегда прогонялись заново, иначе не запускаются уже пройденные тесты
+    outputs.upToDateWhen { false }
+
+    // Зададим пути к тестовым и связанным классам
+    val testSourceSet = sourceSets.test.get()
+    testClassesDirs = testSourceSet.output.classesDirs
+    classpath = testSourceSet.runtimeClasspath
+
 }
